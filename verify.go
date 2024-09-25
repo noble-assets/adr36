@@ -11,10 +11,11 @@ import (
 
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
+	"github.com/cosmos/cosmos-sdk/x/auth/migrations/legacytx"
 )
 
 func VerifySignature(pubkey cryptotypes.PubKey, data []byte, signature []byte) bool {
+	legacytx.RegressionTestingAminoCodec = types.ModuleCdc.LegacyAmino
 	bz := legacytx.StdSignBytes(
 		"",
 		0,
