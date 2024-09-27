@@ -5,7 +5,7 @@ all: proto-all test-unit
 ###                                 Tooling                                 ###
 ###############################################################################
 
-FILES := $(shell find $(shell go list -f '{{.Dir}}' ./...) -name "*.go" -a -not -name "*.pb.go" -a -not -name "*.pb.gw.go" | sed "s|$(shell pwd)/||g")
+FILES := $(shell find $(shell go list -f '{{.Dir}}' ./...) -name "*.go" -a -not -name "*.pulsar.go" | sed "s|$(shell pwd)/||g")
 license:
 	@go-license --config .github/license.yml $(FILES)
 
@@ -13,7 +13,8 @@ license:
 ###                                Protobuf                                 ###
 ###############################################################################
 
-BUF_VERSION=1.39
+BUF_VERSION=1.42
+BUILDER_VERSION=0.15.1
 
 proto-all: proto-format proto-lint proto-gen
 
@@ -27,7 +28,7 @@ proto-format:
 proto-gen:
 	@echo "🤖 Generating code from protobuf..."
 	@docker run --rm --volume "$(PWD)":/workspace --workdir /workspace \
-		adr36-proto sh ./proto/generate.sh
+		ghcr.io/cosmos/proto-builder:$(BUILDER_VERSION) sh ./proto/generate.sh
 	@echo "✅ Completed code generation!"
 
 proto-lint:
@@ -36,11 +37,6 @@ proto-lint:
 	@docker run --rm --volume "$(PWD)":/workspace --workdir /workspace \
 		bufbuild/buf:$(BUF_VERSION) lint
 	@echo "✅ Completed protobuf linting!"
-
-proto-setup:
-	@echo "🤖 Setting up protobuf environment..."
-	@docker build --rm --tag adr36-proto:latest --file proto/Dockerfile .
-	@echo "✅ Setup protobuf environment!"
 
 ###############################################################################
 ###                                 Testing                                 ###

@@ -2,10 +2,14 @@ syntax = "proto3";
 
 package adr36;
 
+import "amino/amino.proto";
+
 option go_package = "adr36.dev/types";
 
 // MsgSignData defines an arbitrary, general-purpose, off-chain message
 message MsgSignData {
+  option (amino.name) = "sign/MsgSignData";
+
   // signer is the bech32 representation of the signer's account address
   string signer = 1;
   // data represents the raw bytes of the content that is signed (text, json, etc)

@@ -1,3 +1,3 @@
 buf generate
-cp -r adr36.dev/* ./
-rm -rf adr36.dev
+cp -r api/adr36/* api/
+rm -rf api/adr36
